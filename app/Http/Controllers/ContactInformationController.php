@@ -57,7 +57,7 @@ class ContactInformationController extends Controller
 
 
         Session::flash('Success','Successfully Added');
-        return view('pages.addNewContact');
+        return redirect()->route('ContactInformation.create');
     }
 
     /**
