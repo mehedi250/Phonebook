@@ -26,7 +26,7 @@ class PhoneNumberController extends Controller
      */
     public function create($id)
     {
-        return view('pages.add_Number')->with('id',$id);
+        return view('pages.add_number')->with('data', $id);
     }
 
     /**
@@ -35,41 +35,67 @@ class PhoneNumberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request,$id)
     { 
         $request->validate([
-            'phone_number' => 'required',
+            'phone_number.*' => 'required|unique:phone_numbers,phone_number',
         ]);
-        $PhoneNumber= new PhoneNumber;
-        $PhoneNumber->phone_number = $request->phone_number;;
-        $PhoneNumber->ContactInformation_id = $id;
-        $PhoneNumber->save();
+
+        if (count($request->phone_number) > 0) {
+            $i=0;
+            foreach ($request->phone_number as $number) {
+                $request->validate([
+                    'phone_number.'.$i => 'required|unique:phone_numbers,phone_number',
+                ]);
+                $i++;
+                
+                $PhoneNumber= new PhoneNumber;
+                $PhoneNumber->phone_number = $number;
+                $PhoneNumber->ContactInformation_id = $id;
+                $PhoneNumber->save();
+            }
+        }
+
+
         Session::flash('Success','Successfully Added');
-        return view('pages.add_Number')->with('id',$id);
+        return redirect()->route('ContactInformation.singleView',$id);
 
     }
 
     
-    public function show(PhoneNumber $phoneNumber)
+    public function show()
     {
         //
     }
 
 
-    public function edit(PhoneNumber $phoneNumber)
+    public function edit($id)
     {
-        //
+        $data = PhoneNumber::find($id);
+        return view('pages.edit_number')->with('data', $data);
     }
 
    
-    public function update(Request $request, PhoneNumber $phoneNumber)
+    public function update(Request $request,$id)
     {
-        //
+        $request->validate([
+            'phone_number' => 'required|unique:phone_numbers,phone_number',
+        ]);
+
+        $info = PhoneNumber::find($id);
+        $info->phone_number =  $request->phone_number;
+        $info->save();
+        Session::flash('Success','Successfully Updated Number');
+        return redirect()->route('ContactInformation.singleView',$info->ContactInformation_id);
     }
 
   
-    public function destroy(PhoneNumber $phoneNumber)
+    public function destroy($id)
     {
-        //
+        $info = PhoneNumber::where('id',$id)->delete();
+
+        Session::flash('Success','Successfully Deleted Number');
+  
+       return redirect()->back();
     }
 }

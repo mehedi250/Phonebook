@@ -1,24 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>View All Contact</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  
-</head>
-<body>
+@extends('pages.master.master')
 
-    
-    @include('pages.layouts.nav');
+@section('title')
+All View
+@endsection
 
-    <div class="container">
+@section('content')
+                @if(session()->has('Success'))
+                    <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ session()->get('Success') }}
+                    </div>
+                @endif
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <ul class="list-group">
                     <a href="{{ route('ContactInformation.create') }}"><li class="list-group-item">Add New Contact</li></a>
                     <a href="{{ route('ContactInformation.show') }}"><li class="list-group-item">View All Contact</li></a>
-
                 </ul>    
             </div>
             <div class="col-md-8">
@@ -45,7 +42,10 @@
                         
                         @endforeach
                         </td>
-                        <td><a href="{{ route('ContactInformation.singleView', $data->id) }}">View</a> </td>
+                        <td>
+                            <a href="{{ route('ContactInformation.singleView', $data->id) }}">View</a> 
+                            <a class="ml-2" onclick="return confirm('Are you sure?')" href="{{ route('ContactInformation.destroy', $data->id) }}"><i class="fas fa-trash-alt  text-danger"></i></a>
+                        </td>
                     </tr>
                         
                     @endforeach
@@ -54,15 +54,20 @@
                 </table>
             </div>
         </div>
-    </div>
-
-        
+@endsection
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
-</body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+

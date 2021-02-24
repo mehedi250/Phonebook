@@ -1,55 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Single View Contact</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  
-</head>
-<body>
+@extends('pages.master.master')
 
 
-    @include('pages.layouts.nav');
+@section('title')
+Single View
+@endsection
 
 
 
-    <div class="container">
+@section('content')
 
-        <h3 class="text-center">Record</h3>  
+            @if(session()->has('Success'))
+                <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ session()->get('Success') }}
+                </div>
+            @endif
+            <h3 class="text-center">Record of {{ $data->name }}</h3>  
             <div class="border ">
-                <div class="row m-1 bg-secondary">
-                    <div class="col-8"><h4 class="text-light">Basic Info</h4></div>
-                    <div class="col-4 text-right"><a class="text-light" href="">Edit</a></h4></div>
+                <div class="row m-1" style="background-color: rgba(0, 0, 0, 0.2);">
+                    <div class="col-8"><h4 class="text-black">Basic Info</h4></div>
+                    <div class="col-4 text-right"><a class="" href="{{ route('ContactInformation.edit', $data->id) }}"><i class="fas fa-edit fa-2x text-success"></i></a></h4></div>
                 </div>
 
                 <div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><p>Name : <p><p>{{ $data->name }}</p></li>
-                        <li class="list-group-item"><p>Address : <p><p>{{ $data->address }}</p></li>
+                        <li class="list-group-item"><p>Name : <span>{{ $data->name }}</span></li>
+                        <li class="list-group-item"><p>Address : <span>{{ $data->address }}</span></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border ">
+            <div class="border mb-2">
                 <div class="row m-1 bg-secondary">
                     <div class="col-8"><h4 class="text-light">Phone Number</h4></div>
-                    <div class="col-4 text-right"><a class="text-light" href="">Edit</a></h4></div>
+                    <div class="col-4 text-right"></h4></div>
                 </div>
 
                 <div>
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush d-flex">
                     @foreach ($data->getphones as $phone)
-                        <li class="list-group-item"><p>{{ $phone->phone_number }}</p></li>
+                        <li class="list-group-item"> <div class="row">
+                            <div class="col-md-8">
+                                <p class="mr-5">{{  $phone->phone_number }}</p>
+                           </div>
+                            <div class="col-md-4 text-right">
+                                <a class=" " href="{{ route('PhoneNumber.edit', $phone->id) }}"><i class="fas fa-edit fa-2x text-success"></i></a>
+                                <a class="" onclick="return confirm('Are you sure?')" href="{{ route('PhoneNumber.destroy', $phone->id) }}"><i class="fas fa-trash-alt fa-2x text-danger"></i></a>
+                            </div>
+                        </li>
                     @endforeach
                     </ul>
                 </div>
             </div>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+            <div>
+                <a class="btn btn-success text-light" href="{{ route('PhoneNumber.create',$data->id) }}"><i class="fas fa-plus-square text-light"></i> Add New Number</a>
+            </div>
 
-</body>
-</html>
+@endsection
